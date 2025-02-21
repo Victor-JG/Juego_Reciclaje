@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Recoge la Basura</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div id="startScreen">
+        <h1>Recoge la Basura</h1>
+        <button onclick="startGame()">Jugar</button>
+    </div>
+    
+    <canvas id="gameCanvas"></canvas>
+
+    <div id="gameOverScreen">
+        <h1>¡Game Over!</h1>
+        <p>Puntaje: <span id="finalScore">0</span></p>
+        <input type="text" id="playerName" placeholder="Tu nombre">
+        <button onclick="saveScore()">Guardar Puntaje</button>
+        <h2>Ranking:</h2>
+        <ul id="rankingList"></ul>
+        <button onclick="restartGame()">Reintentar</button>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
