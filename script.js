@@ -1,4 +1,4 @@
-const canvas = document.getElementById("gameCanvas");
+onst canvas = document.getElementById("gameCanvas");
 const ctx = canvas.getContext("2d");
 canvas.width = 800;
 canvas.height = 600;
@@ -23,12 +23,13 @@ const trashTypes = [
     { name: "botella_plastico", points: 15 },
     { name: "cristal", points: 20 },
     { name: "papel", points: 5 },
-    { name: "cascara_platano", points: -10 }
+    { name: "cascara_platano", points: -10, noGameOver: true }
 ];
 
 let trash = [];
 let score = 0;
 let speed = 2;
+let spawnRate = 3000;
 let gameOver = false;
 
 function movePlayer() {
@@ -70,9 +71,13 @@ function moveTrash() {
             pickupSound.play();
         }
         if (t.y > canvas.height) {
-            gameOver = true;
-            gameOverSound.play();
-            endGame();
+            if (!t.type.noGameOver) {
+                gameOver = true;
+                gameOverSound.play();
+                endGame();
+            } else {
+                trash.splice(index, 1);
+            }
         }
     });
 }
@@ -103,6 +108,19 @@ document.addEventListener("keyup", () => {
     player.dx = 0;
 });
 
+canvas.addEventListener("touchstart", (e) => {
+    let touchX = e.touches[0].clientX;
+    if (touchX < canvas.width / 2) {
+        player.dx = -player.speed;
+    } else {
+        player.dx = player.speed;
+    }
+});
+
+canvas.addEventListener("touchend", () => {
+    player.dx = 0;
+});
+
 function startGame() {
     document.getElementById("startScreen").style.display = "none";
     canvas.style.display = "block";
@@ -110,8 +128,12 @@ function startGame() {
     score = 0;
     trash = [];
     speed = 2;
-    setInterval(generateTrash, 3000); // Menos cantidad de basura
-    setInterval(() => { speed += 0.5; }, 15000); // Aumenta velocidad cada 2 minutos
+    spawnRate = 3000;
+    setInterval(generateTrash, spawnRate);
+    setInterval(() => { 
+        speed += 0.5; 
+        spawnRate = Math.max(1000, spawnRate - 200);
+    }, 30000);
     updateGame();
 }
 
